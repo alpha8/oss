@@ -354,7 +354,7 @@
         }
         incrementStock({
           id: this.form.channelId,
-          stock: this.form.stock
+          count: this.form.stock
         }).then(response => {
           if (response.result === 0) {
             this.stockFormVisible = false;

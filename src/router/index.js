@@ -36,6 +36,7 @@ export const constantRouterMap = [
     path: '/terminal',
     component: Layout,
     name: 'terminal',
+    redirect: '/terminal/list',
     meta: {title: '设备管理', icon: 'product'},
     children: [{
       path: 'list',
