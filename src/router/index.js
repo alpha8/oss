@@ -67,8 +67,22 @@ export const constantRouterMap = [
     {
       path: 'virtualShelf',
       name: 'virtualShelf',
-      component: () => import('@/views/terminal/VirtualShelf'),
+      component: () => import('@/views/terminal/virtualShelfList'),
       meta: {title: '虚拟货架', icon: 'sms-subject'}
+    },
+    {
+      path: 'virtualShelfDetail',
+      name: 'virtualShelfDetail',
+      component: () => import('@/views/terminal/virtualShelfDetail'),
+      meta: {title: '编辑虚拟货架', icon: 'sms-subject'},
+      hidden: true
+    },
+    {
+      path: 'addVirtualShelf',
+      name: 'addVirtualShelf',
+      component: () => import('@/views/terminal/addVirtualShelf'),
+      meta: {title: '新增虚拟货架', icon: 'sms-subject'},
+      hidden: true
     }]
   },
   // {

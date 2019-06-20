@@ -265,7 +265,8 @@
               price: item.price,
               sellPoint: item.sellPoint,
               pictures: item.pictures,
-              stock: item.weight || 0
+              stock: item.weight || 0,
+              salesCount: item.stock && item.stock.salesCount || 0
             }
           }).then(response => {
             if (response.result === 0) {
