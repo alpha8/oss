@@ -25,11 +25,17 @@ export const constantRouterMap = [
     path: '',
     component: Layout,
     redirect: '/home',
+    meta: {title: '工作台', icon: 'home'},
     children: [{
       path: 'home',
       name: 'home',
       component: () => import('@/views/home/index'),
-      meta: {title: '首页', icon: 'home'}
+      meta: {title: '概况', icon: 'marker'}
+    }, {
+      path: 'dashboard',
+      name: 'dashboard',
+      component: () => import('@/views/home/dashboard'),
+      meta: {title: '数据看板', icon: 'example'}
     }]
   },
   {
@@ -83,6 +89,26 @@ export const constantRouterMap = [
       name: 'addVirtualShelf',
       component: () => import('@/views/terminal/addVirtualShelf'),
       meta: {title: '新增虚拟货架', icon: 'sms-subject'},
+      hidden: true
+    },
+    {
+      path: 'versions',
+      name: 'versions',
+      component: () => import('@/views/terminal/versions/index'),
+      meta: {title: 'APP版本管理', icon: 'tree'}
+    },
+    {
+      path: 'updateVersion',
+      name: 'updateVersion',
+      component: () => import('@/views/terminal/versions/update'),
+      meta: {title: '修改版本', icon: 'product-add'},
+      hidden: true
+    },
+    {
+      path: 'addVersion',
+      name: 'addVersion',
+      component: () => import('@/views/terminal/versions/add'),
+      meta: {title: '新增版本', icon: 'product-add'},
       hidden: true
     }]
   },
@@ -194,60 +220,66 @@ export const constantRouterMap = [
       // }
   //   ]
   // },
-  // {
-  //   path: '/oms',
-  //   component: Layout,
-  //   redirect: '/oms/order',
-  //   name: 'oms',
-  //   meta: {title: '订单', icon: 'order'},
-  //   children: [
-  //     {
-  //       path: 'order',
-  //       name: 'order',
-  //       component: () => import('@/views/oms/order/index'),
-  //       meta: {title: '订单列表', icon: 'product-list'}
-  //     },
-  //     {
-  //       path: 'orderDetail',
-  //       name: 'orderDetail',
-  //       component: () => import('@/views/oms/order/orderDetail'),
-  //       meta: {title: '订单详情'},
-  //       hidden:true
-  //     },
-  //     {
-  //       path: 'deliverOrderList',
-  //       name: 'deliverOrderList',
-  //       component: () => import('@/views/oms/order/deliverOrderList'),
-  //       meta: {title: '发货列表'},
-  //       hidden:true
-  //     },
-  //     {
-  //       path: 'orderSetting',
-  //       name: 'orderSetting',
-  //       component: () => import('@/views/oms/order/setting'),
-  //       meta: {title: '订单设置', icon: 'order-setting'}
-  //     },
-  //     {
-  //       path: 'returnApply',
-  //       name: 'returnApply',
-  //       component: () => import('@/views/oms/apply/index'),
-  //       meta: {title: '退货申请处理', icon: 'order-return'}
-  //     },
-  //     {
-  //       path: 'returnReason',
-  //       name: 'returnReason',
-  //       component: () => import('@/views/oms/apply/reason'),
-  //       meta: {title: '退货原因设置', icon: 'order-return-reason'}
-  //     },
-  //     {
-  //       path: 'returnApplyDetail',
-  //       name: 'returnApplyDetail',
-  //       component: () => import('@/views/oms/apply/applyDetail'),
-  //       meta: {title: '退货原因详情'},
-  //       hidden:true
-  //     }
-  //   ]
-  // },
+  {
+    path: '/oms',
+    component: Layout,
+    redirect: '/oms/order',
+    name: 'oms',
+    meta: {title: '订单', icon: 'order'},
+    children: [
+      {
+        path: 'order',
+        name: 'order',
+        component: () => import('@/views/oms/order/index'),
+        meta: {title: '订单列表', icon: 'product-list'}
+      },
+      {
+        path: 'refund',
+        name: 'refundOrderList',
+        component: () => import('@/views/oms/order/refundOrder'),
+        meta: {title: '退款订单', icon: 'order-return'}
+      },
+      {
+        path: 'orderDetail',
+        name: 'orderDetail',
+        component: () => import('@/views/oms/order/orderDetail'),
+        meta: {title: '订单详情'},
+        hidden:true
+      }
+    //   {
+    //     path: 'deliverOrderList',
+    //     name: 'deliverOrderList',
+    //     component: () => import('@/views/oms/order/deliverOrderList'),
+    //     meta: {title: '发货列表'},
+    //     hidden:true
+    //   },
+    //   {
+    //     path: 'orderSetting',
+    //     name: 'orderSetting',
+    //     component: () => import('@/views/oms/order/setting'),
+    //     meta: {title: '订单设置', icon: 'order-setting'}
+    //   },
+    //   {
+    //     path: 'returnApply',
+    //     name: 'returnApply',
+    //     component: () => import('@/views/oms/apply/index'),
+    //     meta: {title: '退货申请处理', icon: 'order-return'}
+    //   },
+    //   {
+    //     path: 'returnReason',
+    //     name: 'returnReason',
+    //     component: () => import('@/views/oms/apply/reason'),
+    //     meta: {title: '退货原因设置', icon: 'order-return-reason'}
+    //   },
+    //   {
+    //     path: 'returnApplyDetail',
+    //     name: 'returnApplyDetail',
+    //     component: () => import('@/views/oms/apply/applyDetail'),
+    //     meta: {title: '退货原因详情'},
+    //     hidden:true
+    //   }
+    ]
+  },
   // {
   //   path:'/sms',
   //   component: Layout,

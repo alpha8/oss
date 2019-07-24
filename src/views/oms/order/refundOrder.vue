@@ -35,15 +35,6 @@
               placeholder="请选择时间">
             </el-date-picker>
           </el-form-item>
-          <el-form-item label="订单状态：">
-            <el-select v-model="listQuery.status" class="input-width" placeholder="全部" clearable>
-              <el-option v-for="item in statusOptions"
-                         :key="item.value"
-                         :label="item.label"
-                         :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
         </el-form>
       </div>
     </el-card>
@@ -82,10 +73,6 @@
               size="mini"
               @click="handleViewOrder(scope.$index, scope.row)"
             >查看订单</el-button>
-            <el-button
-              size="mini"
-              @click="handleCloseOrder(scope.$index, scope.row)"
-              v-show="scope.row.status===2">关闭订单</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -102,22 +89,6 @@
         :total="total">
       </el-pagination>
     </div>
-    <el-dialog
-      title="关闭订单"
-      :visible.sync="closeOrder.dialogVisible" width="30%">
-      <span style="vertical-align: top">操作备注：</span>
-      <el-input
-        style="width: 80%"
-        type="textarea"
-        :rows="5"
-        placeholder="请输入内容"
-        v-model="closeOrder.content">
-      </el-input>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="closeOrder.dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="handleCloseOrderConfirm">确 定</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 <script>
@@ -130,7 +101,7 @@
     type: 100,
     orderNo: null,
     receiver: null,
-    status: null,
+    status: 7,
     startDate: null
   };
   export default {
@@ -194,12 +165,10 @@
           return '已完成';
         } else if (value === 4) {
           return '已关闭';
-        } else if (value == 0){
-          return '待付款';
         } else if (value == 7){
           return '已退款';
-        } else {
-          return '无效订单';
+        } else if (value == 0){
+          return '待付款';
         }
       },
     },
@@ -230,32 +199,8 @@
         this.listQuery.currentPage = val;
         this.getList();
       },
-      handleCloseOrderConfirm() {
-        if (this.closeOrder.content == null || this.closeOrder.content === '') {
-          this.$message({
-            message: '操作备注不能为空',
-            type: 'warning',
-            duration: 1000
-          });
-          return;
-        }
-        let params = new URLSearchParams();
-        params.append('ids', this.closeOrder.orderIds);
-        params.append('note', this.closeOrder.content);
-        closeOrder(params).then(response=>{
-          this.closeOrder.orderIds=[];
-          this.closeOrder.dialogVisible=false;
-          this.getList();
-          this.$message({
-            message: '修改成功',
-            type: 'success',
-            duration: 1000
-          });
-        });
-      },
       getList() {
         this.listLoading = true;
-        this.listQuery.status = this.listQuery.status || null;
         fetchList(this.listQuery).then(response => {
           this.listLoading = false;
           this.list = response.orders;

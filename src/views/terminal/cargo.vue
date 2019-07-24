@@ -9,7 +9,7 @@
             <div class="cargo-handle-btn" v-if="o.product" @click.stop.prevent="openGoodsShelfForm(o)">更换商品</div>
             <div class="cargo-handle-btn" v-if="!o.product" @click.stop.prevent="openGoodsShelfForm(o)">上架商品</div>
             <div class="cargo-handle-btn" v-if="o.product" @click.stop.prevent="handleOffShelf(o)">下架商品</div>
-            <div class="cargo-handle-btn" v-if="o.product" @click.stop.prevent="openStockForm(o)">增加库存</div>
+            <div class="cargo-handle-btn" v-if="o.product" @click.stop.prevent="openStockForm(o)">增加上架数</div>
             <div class="cargo-handle-btn" @click.stop.prevent="openCapacityForm(o)">更改容量</div>
           </div>
           <div class="item-wrap">
@@ -23,7 +23,7 @@
             <div class="item-desc">
               <p class="highlight">{{o.product && o.product.stock || 0}} / {{o.capacity}}</p>
               <p v-if="o.product" :title="o.product.name">{{o.product.name}}</p>
-              <p v-else title="无配置商品">无配置商品</p>
+              <p v-else title="无配置商品">空</p>
             </div>
           </div>
         </div>
@@ -32,7 +32,7 @@
     <el-dialog title="更新货道容量" :visible.sync="capacityFormVisible">
       <el-form :model="form">
         <el-form-item label="货道容量：" label-width="120px">
-          <el-input v-model="form.capacity" autocomplete="off" class="mini-input"></el-input>
+          <el-input-number v-model="form.capacity" :min="1" :max="14"></el-input-number>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -40,14 +40,14 @@
         <el-button type="primary" @click.stop.prevent="updateCapacity()">确 定</el-button>
       </div>
     </el-dialog>
-    <el-dialog title="增加库存" :visible.sync="stockFormVisible">
+    <el-dialog title="增加上架数量" :visible.sync="stockFormVisible">
       <el-form :model="form">
-        <el-form-item label="库存数：" label-width="120px">
-          <el-input v-model="form.stock" autocomplete="off" class="mini-input"></el-input>
+        <el-form-item label="新增上架数：" label-width="120px">
+          <el-input-number v-model="form.stock" :min="1" :max="form.capacity - form.oldStock"></el-input-number>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="stockFormVisible = false">取 消</el-button>
+        <el-button @click="stockFormVisible = false; form.stock = 1;">取 消</el-button>
         <el-button type="primary" @click.stop.prevent="updateStock()">确 定</el-button>
       </div>
     </el-dialog>
@@ -63,7 +63,7 @@
                 v-loading="listLoading"
                 border>
         <el-table-column label="" width="90" align="center">
-          <template slot-scope="scope"><input type="radio" name="pid" :value="scope.row.id" v-model="goodsShelf.pid" @click="chooseGoods(scope.row)"></template>
+          <template slot-scope="scope"><el-radio v-model="goodsShelf.pid" :label="scope.row.id" name="pid" @change="chooseGoods(scope.row)">&nbsp;</el-radio></template>
         </el-table-column>
         <el-table-column label="商品图片" width="140" align="center">
           <template slot-scope="scope"><img :src="getPictureUrl(scope.row)" height="45" border="0"></template>
@@ -74,11 +74,8 @@
         <el-table-column label="价格" width="120" align="center">
           <template slot-scope="scope">¥{{scope.row.price}}</template>
         </el-table-column>
-        <el-table-column label="库存" width="120" align="center">
-          <template slot-scope="scope">{{scope.row.stock && scope.row.stock.total || 0}}</template>
-        </el-table-column>
         <el-table-column label="上架数量" width="150" align="center">
-          <template slot-scope="scope"><el-input v-model="scope.row.weight"></el-input></template>
+          <template slot-scope="scope"><el-input-number v-model="scope.row.weight" :min="0" :max="channel.capacity || 14" size="small"></el-input-number></template>
         </el-table-column>
       </el-table>
       <div class="pagination-container">
@@ -252,11 +249,19 @@
         this.selectedGoods = {};
       },
       handleGoodsShelfConfirm() {
-        this.goodsShelf.dialogVisible = false;
         if (this.goodsShelf.pid && this.selectedGoods.id) {
           let item = this.selectedGoods;
+          if (item.weight > this.channel.capacity) {
+            this.$message({
+              message: '上架数量超出货道容量，请重新录入',
+              type: 'error',
+              duration: 1000
+            });
+            return;
+          }
           onShelf({
             id: this.channel.id,
+            deviceId: this.listQuery.deviceId || '',
             product: {
               name: item.name,
               oldPrice: item.markPrice || item.price,
@@ -278,6 +283,7 @@
               this.selectedGoods = {};
               this.goodsShelf.pageIndex = 1;
               this.getList();
+              this.goodsShelf.dialogVisible = false;
             } else {
               this.$message({
                 message: '上架失败',
@@ -311,7 +317,8 @@
       },
       handleOffShelf(item) {
         offShelf({
-          id: item.id
+          id: item.id,
+          deviceId: this.listQuery.deviceId || ''
         }).then(response => {
           if (response.result === 0) {
             this.$message({
@@ -338,7 +345,7 @@
       updateStock() {
         if (this.form.stock == 0) {
           this.$message({
-            message: '库存数不能为0',
+            message: '上架数量不能为0',
             type: 'error',
             duration: 1000
           });
@@ -346,7 +353,7 @@
         }
         if (Number(this.form.stock) + this.form.oldStock > this.form.capacity) {
           this.$message({
-            message: '库存数超出货道容量，请重新录入',
+            message: '上架数量超出货道容量，请重新录入',
             type: 'error',
             duration: 1000
           });
@@ -354,8 +361,10 @@
         }
         incrementStock({
           id: this.form.channelId,
-          count: this.form.stock
+          count: this.form.stock,
+          deviceId: this.listQuery.deviceId || ''
         }).then(response => {
+          this.form.stock = 1;
           if (response.result === 0) {
             this.stockFormVisible = false;
             this.$message({

@@ -7,7 +7,7 @@
       :collapse="isCollapse"
       background-color="#495060"
       text-color="#bfcbd9"
-      active-text-color="#409EFF"
+      active-text-color="#ffd04b"
     >
       <sidebar-item :routes="routes"></sidebar-item>
     </el-menu>

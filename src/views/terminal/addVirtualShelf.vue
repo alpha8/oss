@@ -2,7 +2,7 @@
   <virtual-shelf-detail></virtual-shelf-detail>
 </template>
 <script>
-  import VirtualShelfDetail from './VirtualShelfDetail'
+  import VirtualShelfDetail from './virtualShelfDetail'
   export default {
     name: 'addVirtualShelf',
     components: { VirtualShelfDetail }

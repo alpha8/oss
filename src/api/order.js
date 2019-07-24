@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 export function fetchList(params) {
   return request({
-    url:'/order/list',
+    url:'/cms/order/list',
     method:'get',
     params:params
   })
@@ -15,25 +15,9 @@ export function closeOrder(params) {
   })
 }
 
-export function deleteOrder(params) {
-  return request({
-    url:'/order/delete',
-    method:'post',
-    params:params
-  })
-}
-
-export function deliveryOrder(data) {
-  return request({
-    url:'/order/update/delivery',
-    method:'post',
-    data:data
-  });
-}
-
 export function getOrderDetail(id) {
   return request({
-    url:'/order/'+id,
+    url:'/cms/order/'+id,
     method:'get'
   });
 }

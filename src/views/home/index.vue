@@ -1,6 +1,7 @@
 <template>
   <div class="app-container">
     <div class="total-layout">
+      <section><div class="section-title">经营情况</div></section>
       <el-row :gutter="20">
         <el-col :span="8">
           <div class="total-frame">
@@ -25,88 +26,11 @@
         </el-col>
       </el-row>
     </div>
-    <div class="overview-layout">
-      <el-row :gutter="20">
-        <el-col :span="12">
-          <div class="out-border">
-            <div class="layout-title">商品总览</div>
-            <div style="padding: 40px">
-              <el-row>
-                <el-col :span="6" class="color-danger overview-item-value">100</el-col>
-                <el-col :span="6" class="color-danger overview-item-value">400</el-col>
-                <el-col :span="6" class="color-danger overview-item-value">50</el-col>
-                <el-col :span="6" class="color-danger overview-item-value">500</el-col>
-              </el-row>
-              <el-row class="font-medium">
-                <el-col :span="6" class="overview-item-title">已下架</el-col>
-                <el-col :span="6" class="overview-item-title">已上架</el-col>
-                <el-col :span="6" class="overview-item-title">库存紧张</el-col>
-                <el-col :span="6" class="overview-item-title">全部商品</el-col>
-              </el-row>
-            </div>
-          </div>
-        </el-col>
-        <el-col :span="12">
-          <div class="out-border">
-            <div class="layout-title">用户总览</div>
-            <div style="padding: 40px">
-              <el-row>
-                <el-col :span="6" class="color-danger overview-item-value">100</el-col>
-                <el-col :span="6" class="color-danger overview-item-value">200</el-col>
-                <el-col :span="6" class="color-danger overview-item-value">1000</el-col>
-                <el-col :span="6" class="color-danger overview-item-value">5000</el-col>
-              </el-row>
-              <el-row class="font-medium">
-                <el-col :span="6" class="overview-item-title">今日新增</el-col>
-                <el-col :span="6" class="overview-item-title">昨日新增</el-col>
-                <el-col :span="6" class="overview-item-title">本月新增</el-col>
-                <el-col :span="6" class="overview-item-title">会员总数</el-col>
-              </el-row>
-            </div>
-          </div>
-        </el-col>
-      </el-row>
-    </div>
+
+    <section><div class="section-title">订单统计</div></section>
     <div class="statistics-layout">
-      <div class="layout-title">订单统计</div>
       <el-row>
-        <el-col :span="4">
-          <div style="padding: 20px">
-            <div>
-              <div style="color: #909399;font-size: 14px">本月订单总数</div>
-              <div style="color: #606266;font-size: 24px;padding: 10px 0">10000</div>
-              <div>
-                <span class="color-success" style="font-size: 14px">+10%</span>
-                <span style="color: #C0C4CC;font-size: 14px">同比上月</span>
-              </div>
-            </div>
-            <div style="margin-top: 20px;">
-              <div style="color: #909399;font-size: 14px">本周订单总数</div>
-              <div style="color: #606266;font-size: 24px;padding: 10px 0">1000</div>
-              <div>
-                <span class="color-danger" style="font-size: 14px">-10%</span>
-                <span style="color: #C0C4CC;font-size: 14px">同比上周</span>
-              </div>
-            </div>
-            <div style="margin-top: 20px;">
-              <div style="color: #909399;font-size: 14px">本月销售总额</div>
-              <div style="color: #606266;font-size: 24px;padding: 10px 0">100000</div>
-              <div>
-                <span class="color-success" style="font-size: 14px">+10%</span>
-                <span style="color: #C0C4CC;font-size: 14px">同比上月</span>
-              </div>
-            </div>
-            <div style="margin-top: 20px;">
-              <div style="color: #909399;font-size: 14px">本周销售总额</div>
-              <div style="color: #606266;font-size: 24px;padding: 10px 0">50000</div>
-              <div>
-                <span class="color-danger" style="font-size: 14px">-10%</span>
-                <span style="color: #C0C4CC;font-size: 14px">同比上周</span>
-              </div>
-            </div>
-          </div>
-        </el-col>
-        <el-col :span="20">
+        <el-col :span="24">
           <div style="padding: 10px;border-left:1px solid #DCDFE6">
             <el-date-picker
               style="float: right;z-index: 1"
@@ -132,6 +56,48 @@
           </div>
         </el-col>
       </el-row>
+    </div>
+
+    <section><div class="section-title">产品销量排行</div></section>
+    <div class="section-wrap">
+      <el-table ref="productTable"
+                :data="[]"
+                style="width: 100%"
+                border>
+        <el-table-column label="排名" width="150" align="center">
+          <template slot-scope="scope">{{scope.row.rank}}</template>
+        </el-table-column>
+        <el-table-column label="商品"  align="center">
+          <template slot-scope="scope">{{scope.row.productName}}</template>
+        </el-table-column>
+        <el-table-column label="销量" width="180" align="center">
+          <template slot-scope="scope">{{scope.row.orderCount}}</template>
+        </el-table-column>
+        <el-table-column label="毛利" width="180" align="center">
+          <template slot-scope="scope">￥{{scope.row.gross}}</template>
+        </el-table-column>
+      </el-table>
+    </div>
+
+    <section><div class="section-title">设备分析</div></section>
+    <div class="section-wrap">
+      <el-table ref="deviceTable"
+                :data="[]"
+                style="width: 100%"
+                border>
+        <el-table-column label="设备名称" align="center">
+          <template slot-scope="scope"><p style="text-align:left">{{scope.row.rank}}</p></template>
+        </el-table-column>
+        <el-table-column label="今日交易额 / 毛利 / 订单量" align="center">
+          <template slot-scope="scope">{{scope.row.productName}}</template>
+        </el-table-column>
+        <el-table-column label="昨日交易额 / 毛利 / 订单量"  align="center">
+          <template slot-scope="scope">{{scope.row.orderCount}}</template>
+        </el-table-column>
+        <el-table-column label="本月交易额 / 毛利 / 订单量" align="center">
+          <template slot-scope="scope">￥{{scope.row.gross}}</template>
+        </el-table-column>
+      </el-table>
     </div>
   </div>
 </template>
@@ -249,9 +215,25 @@
 
 <style scoped>
   .app-container {
-    margin-top: 15px;
-    margin-left: 120px;
-    margin-right: 120px;
+    margin-left: 20px;
+    margin-right: 20px;
+    padding: 10px;
+    box-sizing: border-box;
+    overflow-x: hidden;
+  }
+  section {
+    display: flex;
+    vertical-align: bottom;
+    margin-top: 25px;
+    margin-bottom: 18px;
+  }
+  .section-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1f273b;
+    line-height: 1;
+    border-left: 3px solid #1f273b;
+    padding: 0 6px;
   }
 
   .address-layout {

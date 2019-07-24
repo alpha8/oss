@@ -69,8 +69,8 @@
         <el-table-column label="状态" width="100" align="center">
           <template slot-scope="scope">{{scope.row.deviceStatus | verifyStatusFilter}}</template>
         </el-table-column>
-        <el-table-column label="地址" align="left">
-          <template slot-scope="scope">{{scope.row.address}}</template>
+        <el-table-column label="地址" align="center">
+          <template slot-scope="scope"><p style="text-align:left">{{scope.row.address}}</p></template>
         </el-table-column>
         <el-table-column label="客服电话" width="120" align="center">
           <template slot-scope="scope">{{scope.row.serviceNo}}</template>

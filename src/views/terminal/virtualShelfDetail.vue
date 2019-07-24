@@ -28,11 +28,12 @@
       <div class="container">
         <div class="shelf-wrap">
           <div class="shelf-container">
-            <draggable class="drag-container" :options="{animation: 60, handle:'.layer-product-item'}" group="tea" :list="shelvedList">
-                <div class="layer-product-item" v-for="(item, index) in shelvedList" :key="item.pid">
+            <draggable class="drag-container" v-bind="options" handle=".layer-product-item" group="tea" :list="shelvedList">
+                <div class="layer-product-item" v-for="(item, index) in shelvedList" :key="index">
                   <div class="product-image">
-                    <img :src="getProductImg(item)" alt="">
+                    <img :src="getProductImg(item)" alt="" width="200">
                     <img src="http://www.yihuyixi.com/saleoff.png" width="80" height="80" alt="" border="0" class="saleoff" v-if="item.status === 1">
+                    <div class="handler-mask"><div class="cargo-handle-btn" @click="removeProduct(index, item)"><i class="el-icon-delete"></i></div></div>
                   </div>
                   <div class="product-desc">
                     <p>{{item.name}}</p>
@@ -60,11 +61,11 @@
               </el-input>
             </header>
             <main>
-              <draggable class="drag-container" :clone="clone" :list="filterGoodsList" :options="{animation: 60, handle:'.el-card'}" @start="start" :group="{ name: 'tea', pull: pullFunction }">
-                <el-card :body-style="{ padding: '15px 15px 10px 15px' }" v-for="(item, index) in filterGoodsList" :key="item.pid">
+              <draggable class="drag-container" :clone="clone" :list="filterGoodsList" v-bind="options" handle=".el-card" @start="start" :group="{ name: 'tea', pull: pullFunction }">
+                <el-card :body-style="{ padding: '15px 15px 10px 15px' }" v-for="(item, index) in filterGoodsList" :key="index">
                   <div class="product-item">
                     <div class="product-image">
-                      <img :src="getProductImg(item)" alt="">
+                      <img :src="getProductImg(item)" alt="" width="200">
                     </div>
                   </div>
                   <div class="product-desc">
@@ -114,7 +115,8 @@
             {required: true, message: '请输入的关联设备', trigger: 'blur'}
           ]
         },
-        loading: false
+        loading: false,
+        options: {animation: 60}
       }
     },
     created() {
@@ -177,7 +179,7 @@
       },
       getProductImg(product) {
         if (product.pictures && product.pictures.length) {
-          return `${Constants.Config.psServer}${product.pictures[0].id}?w=200`;
+          return `${Constants.Config.psServer}${product.pictures[0].id}?w=500`;
         }
         return Constants.Config.defaultAvatar;
       },
@@ -192,6 +194,20 @@
       },
       goBack() {
         this.$router.back();
+      },
+      removeProduct(index, item) {
+        var found = false;
+        for (var i=0; i<this.filterGoodsList.length; i++){
+          if (this.filterGoodsList[i].pid == item.pid) {
+            found = true;
+            break;
+          }
+        }
+        if (!found) {
+          let o = Object.assign({}, item);
+          this.filterGoodsList.unshift(o);
+        }
+        this.shelvedList.splice(index, 1);
       },
       saveVirtualShelf(formName) {
         this.$refs[formName].validate((valid) => {
@@ -280,8 +296,7 @@
   flex-flow: column nowrap;
   width: 80%;
   height: 650px;
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow: hidden;
 }
 .shelf-container{
   border: 1px solid #d1d1d1;
@@ -290,6 +305,8 @@
   height: 100%;
   padding: 20px 0 20px 30px;
   box-sizing: border-box;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 .shelf-container .drag-container{
   width: 100%;
@@ -305,7 +322,7 @@
   box-sizing: border-box;
   border-radius: 5px;
   overflow: hidden;
-  margin-right: 50px;
+  margin-right: 40px;
   margin-bottom: 20px;
 }
 .shelf-container .layer-product-item:nth-child(4) {
@@ -325,6 +342,32 @@
   overflow: hidden;
   object-fit: contain;
   object-position: center;
+}
+.shelf-container .product-image:hover .handler-mask{
+  opacity: 1;
+}
+.shelf-container .product-image .handler-mask {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  background: rgba(0, 0, 0, .4);
+  display: flex;
+  text-align: center;
+  align-items: center;
+  align-content: center;
+  opacity: 0;
+  transition: 0.3s;
+}
+.shelf-container .handler-mask .cargo-handle-btn{
+  width: 100%;
+  color: #e5b661;
+}
+.shelf-container .handler-mask .cargo-handle-btn > i {
+  cursor: pointer;
+  font-size: 26px;
 }
 .shelf-container .product-image>img {
   max-width: 100%;

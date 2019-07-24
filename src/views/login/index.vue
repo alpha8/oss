@@ -1,20 +1,19 @@
 <template>
   <div>
     <el-card class="login-form-layout">
-      <el-form autoComplete="off"
-               :model="loginForm"
+      <el-form :model="loginForm"
                :rules="loginRules"
                ref="loginForm"
                label-position="left">
         <div style="text-align: center">
           <svg-icon icon-class="login-mall" style="width: 56px;height: 56px;color: #409EFF"></svg-icon>
         </div>
-        <h2 class="login-title color-main">一虎一席售卖机运营平台</h2>
+        <h2 class="login-title color-main">一虎一席茶美售货机运营平台</h2>
         <el-form-item prop="username">
           <el-input name="username"
                     type="text"
                     v-model="loginForm.username"
-                    autoComplete="off"
+                    autocomplete="off"
                     placeholder="请输入用户名">
           <span slot="prefix">
             <svg-icon icon-class="user" class="color-main"></svg-icon>
@@ -26,19 +25,19 @@
                     :type="pwdType"
                     @keyup.enter.native="handleLogin"
                     v-model="loginForm.password"
-                    autoComplete="off"
+                    autocomplete="off"
                     placeholder="请输入密码">
           <span slot="prefix">
             <svg-icon icon-class="password" class="color-main"></svg-icon>
           </span>
-            <span slot="suffix" @click="showPwd">
+          <span slot="suffix" @click="showPwd">
             <svg-icon icon-class="eye" class="color-main"></svg-icon>
           </span>
           </el-input>
         </el-form-item>
         <el-form-item style="margin-bottom: 60px">
           <el-button style="width: 100%" type="primary" :loading="loading" @click.native.prevent="handleLogin">
-            登录
+            登&nbsp;&nbsp;录
           </el-button>
         </el-form-item>
       </el-form>
@@ -123,6 +122,10 @@
 
   .login-title {
     text-align: center;
+    font-size: 20px;
+  }
+  .el-input {
+    font-size: 18px;
   }
 
   .login-center-layout {
